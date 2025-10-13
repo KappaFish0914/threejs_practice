@@ -1,6 +1,10 @@
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as THREE from 'three';
-
+/**
+ * 坐标系
+ * @param {*} scene 
+ * @returns 
+ */
 export function initGridHelper(scene) {
   const size = 100;
   const divisions = 10;
@@ -16,11 +20,41 @@ export function initGridHelper(scene) {
 
   return axesHelper
 } 
-
+/**
+ * 轨道
+ * @param {*} camera 
+ * @param {*} renderer 
+ * @returns 
+ */
 export function initOrbitControls(camera, renderer) {
   const controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
 
   return controls
 }
+/**
+ * 平行光辅助对象
+ */
+export function initDirectionalLightHelper(scene, light, size = 5, color) {
+  const helper = new THREE.DirectionalLightHelper(light, size, color)
+  scene.add(helper)
+  return helper;
+}
 
+/**
+ * 半球光辅助对象
+ */
+export function initHemispherelLightHelper(scene, light, size = 5, color) {
+  const helper = new THREE.HemisphereLightHelper(light, size, color)
+  scene.add(helper)
+  return helper;
+}
+
+/**
+ * 点光源辅助对象
+ */
+export function initPointLightHelper(scene, light, size = 1, color) {
+  const helper = new THREE.PointLightHelper(light, size, color)
+  scene.add(helper)
+  return helper;
+}

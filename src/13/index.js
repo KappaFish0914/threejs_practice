@@ -121,8 +121,7 @@ renderer.domElement.addEventListener("mouseup", (event) => {
     raycaster.ray.direction.y,
     raycaster.ray.direction.z
   )
-  console.log('pos', pos)
-  createSphere({x: pos.x, y: pos.y, z: pos.y}, direction)
+  createSphere({x: pos.x, y: pos.y, z: pos.z}, direction)
 })
 renderer.render(scene, camera);
 

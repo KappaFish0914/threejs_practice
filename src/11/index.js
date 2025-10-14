@@ -72,25 +72,28 @@ const raycaster = new THREE.Raycaster()
 const rayOrigin = new THREE.Vector3(-6, 0, 0)
 const rayDirection = new THREE.Vector3(1, 0, 0)
 rayDirection.normalize(); // 归一化/成为单位向量
-raycaster.set(rayOrigin, rayDirection)
+// raycaster.set(rayOrigin, rayDirection)
 const meshes = [sphere, sphere2, sphere3]
-// const intersectArr = raycaster.intersectObject(sphere)
-// const intersectArr2 = raycaster.intersectObjects(meshes)
-// console.log('intersectArr', intersectArr)
-// console.log('intersectArr2', intersectArr2)
+
+const pointer = new THREE.Vector2()
+function onPointerMove(event) {
+  // 归一化处理
+  // (event.clientX / window.innerWidth) 的范围在 [0, 1]
+  // 再 乘以 2,范围在 [0, 2]
+  // 再 减去 1， 范围在 [-1, 1]
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1
+  // (event.clientY / window.innerHeight) 的范围在 [0, 1]
+  // 再 乘以 2,范围在 [0, 2]
+  // 再 减去 1， 范围在 [-1, 1]
+  // 因为 html dom 的Y轴方向与 THREEJS 的Y轴方向是相反的
+  // 所以 整体再加个 负号 
+  pointer.y = -((event.clientY / window.innerHeight) * 2 - 1)
+  
+}
 
 // 环境光 不会产生阴影
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight)
-// 平行光
-// const light = new THREE.DirectionalLight(0xffffff, 0.5);
-// light.position.set(30, 30, -30)
-// light.castShadow = true
-// // 增加阴影分辨率减少阴影毛刺/锯齿
-// light.shadow.mapSize.width = 2048
-// light.shadow.mapSize.height = 2048
-// scene.add(light)
-// let lightHelper = initDirectionalLightHelper(scene, light, 5)
 // 点光源
 const light = new THREE.PointLight(0xffffff, 5, 100, 0.5);
 light.position.set(10, 10, 0)
@@ -102,33 +105,37 @@ light.shadow.mapSize.height = 512
 scene.add(light)
 let lightHelper = initPointLightHelper(scene, light, 2)
 
+
+
 let delta = 0.5;
-let radius = 30;
 function animate() {  
-  renderer.render(scene, camera);
-  delta += 2
   
-  const intersectArr = raycaster.intersectObjects(meshes)
+  delta += 2
+  raycaster.setFromCamera(pointer, camera);
+
+  
   sphere.position.y = 2 * Math.sin(delta * Math.PI / 180 * 0.5)
   sphere2.position.y = 2 * Math.sin(delta * Math.PI / 180 )
   sphere3.position.y = 2 * Math.sin(delta * Math.PI / 180 * 1.5)
+
   meshes.forEach((mesh) => {
     mesh.material.color.set(new THREE.Color(0xffffff))
   })
+  const intersectArr = raycaster.intersectObjects(meshes)
+  // console.log('intersectArr', intersectArr)
   for (const intersecObject of intersectArr) {
     intersecObject.object.material.color.set(new THREE.Color(0xff0000))
-    
   } 
-  
-  
-  
   
   if (controls) {
     controls.update()
   }
+  renderer.render(scene, camera);
 }
 
 renderer.setAnimationLoop(animate);
+
+window.addEventListener('pointermove', onPointerMove)
 
 let controls = null
 function initControls() {
@@ -136,7 +143,7 @@ function initControls() {
   initGridHelper(scene)
   
 }
-initControls()
+// initControls()
 
 
 // 窗口大小调整

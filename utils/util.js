@@ -1,5 +1,6 @@
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as THREE from 'three';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 /**
  * 坐标系
  * @param {*} scene 
@@ -57,4 +58,14 @@ export function initPointLightHelper(scene, light, size = 1, color) {
   const helper = new THREE.PointLightHelper(light, size, color)
   scene.add(helper)
   return helper;
+}
+
+export function initStats() {
+  const stats = new Stats();
+  document.body.appendChild(stats.dom);
+  stats.dom.style.position = "absolute";
+  stats.dom.style.left = "20px";
+  stats.dom.style.top = "20px";
+
+  return stats;
 }

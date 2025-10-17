@@ -16,7 +16,7 @@ export function initGridHelper(scene) {
   scene.add(gridHelper);
 
   // 辅助坐标系
-  const axesHelper = new THREE.AxesHelper();
+  const axesHelper = new THREE.AxesHelper(2);
   scene.add(axesHelper);
 
   return axesHelper

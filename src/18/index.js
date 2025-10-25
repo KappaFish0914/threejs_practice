@@ -53,11 +53,12 @@ document.body.appendChild(renderer.domElement);
 const textureLoader = new THREE.TextureLoader()
 const texture = textureLoader.load("../../assets/images/17/hay_bales_1k.jpg");
 
+const sphereMaterial = new THREE.MeshBasicMaterial({
+  map: texture
+})
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(16, 32, 32),
-  new THREE.MeshBasicMaterial({
-    map: texture
-  })
+  sphereMaterial
 )
 sphere.geometry.scale(1, 1, -1)
 scene.add(sphere)
@@ -99,17 +100,52 @@ renderer.domElement.addEventListener('mousemove', (event) => {
     const halfHeight = window.innerHeight / 2
     const top = - halfHeight * dncPosition.y + halfHeight
     
-    oTips.style.left = left + 'px'
-    oTips.style.top = top - oTips.clientHeight / 2 + 'px' 
+    // oTips.style.left = left + 'px'
+    // oTips.style.top = top - oTips.clientHeight / 2 + 'px' 
     
   } else {
-    oTips.style.left = 0
-    oTips.style.top = 0
+    // oTips.style.left = 0
+    // oTips.style.top = 0
   }
 
 })
+
+let roomType = 'room'
 renderer.domElement.addEventListener('mousedown', (event) => {
   
+  // --------------------- 屏幕坐标转化成世界坐标 开始 ------------------------
+  // 屏幕坐标归一化
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+  mouse.y = - ((event.clientY / window.innerHeight) * 2 - 1)
+  // 利用 raycaster 射线，扫到物体后，获取物体的坐标
+  raycaster.setFromCamera(mouse, camera)
+  let intersect = raycaster.intersectObject(sprite)
+  
+  if (intersect && intersect.length) {
+    if (roomType === 'scene1') {
+      roomType = 'scene2';
+      const changeTexture = textureLoader.load('../../assets/images/17/magalies_field_sunset_1k.jpg')
+      const changeMaterial = new THREE.MeshBasicMaterial({
+        map: changeTexture
+      })
+      sphere.material = changeMaterial;
+
+      const changeSprite = textureLoader.load("../../assets/images/17/scene2.png")
+      const changeSpriteMaterial = new THREE.SpriteMaterial({
+        map: changeSprite
+      })
+      sprite.material = changeSpriteMaterial;
+      
+      sprite.position.set(-10, -1, 8)
+    } else {
+      roomType = 'scene1';
+      sphere.material = sphereMaterial;
+      sprite.material = spriteMaterial;
+      sprite.position.set(-1.8, 0, -1.5)
+    }
+    
+
+  }
 })
 
 let controls = null

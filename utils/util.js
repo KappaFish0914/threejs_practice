@@ -4,9 +4,10 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 /**
  * 坐标系
  * @param {*} scene 
+ * @param {number | undefined} axesSize 坐标轴大小，默认 10 
  * @returns 
  */
-export function initGridHelper(scene) {
+export function initGridHelper(scene, axesSize = 10) {
   const size = 100;
   const divisions = 10;
   const colorCenterline = 0xffffff
@@ -15,12 +16,22 @@ export function initGridHelper(scene) {
   const gridHelper = new THREE.GridHelper(size, divisions, colorCenterline, colorOtherLine)
   scene.add(gridHelper);
 
-  // 辅助坐标系
-  const axesHelper = new THREE.AxesHelper(2);
+  initAxesHelper(scene, axesSize)
+} 
+/**
+ * 绘制辅助坐标系
+ * @param {*} scene
+ * @param {number | undefined} axesSize 
+ * @returns 
+ */
+export function initAxesHelper(scene, axesSize = 10) {
+  
+  const axesHelper = new THREE.AxesHelper(axesSize);
   scene.add(axesHelper);
 
   return axesHelper
-} 
+}
+
 /**
  * 轨道
  * @param {*} camera 

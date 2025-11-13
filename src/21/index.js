@@ -27,50 +27,68 @@ function initHelper() {
 }
 initHelper()
 
-
-const player = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.2, 0.2, 1, 32),
-  new THREE.MeshBasicMaterial({
-    color: 0xffff00
-  })
-)
-player.position.set(0, 0.5, 0);
-scene.add(player);
-// 速度(方向 + 大小)
-const velocity = new THREE.Vector3(3, 0, 3);
-
-const keyEnum = {
-  W: false,
-  A: false,
-  D: false,
-  S: false
+const textureLoader = new THREE.TextureLoader();
+const imgs = [
+  "../../assets/images/21/cube4.png",
+  "../../assets/images/21/cube3.png",
+  "../../assets/images/21/cube5.png",
+  "../../assets/images/21/cube6.png",
+  "../../assets/images/21/cube1.png",
+  "../../assets/images/21/cube2.png",
+]
+const materials = [];
+const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
+for (let i = 0; i < imgs.length; i++) {
+  const img = imgs[i];
+  const texture = textureLoader.load(img);
+  const boxMaterial = new THREE.MeshBasicMaterial(
+    {
+      map: texture
+    }
+  )
+  materials.push(boxMaterial)
+  
 }
-window.addEventListener("keydown", (event) => {
-  const keyCode = event.key.toUpperCase()
-  if(keyEnum.hasOwnProperty(keyCode)) {
-    keyEnum[keyCode] = true
-  }
-})
-window.addEventListener("keyup", (event) => {
-  const keyCode = event.key.toUpperCase()
-  if(keyEnum.hasOwnProperty(keyCode)) {
-    keyEnum[keyCode] = false
-  }
-})
+const box = new THREE.Mesh(boxGeometry, materials);
 
+scene.add(box);
+/**
+ * 绕着x轴旋转90度
+ */
+// const euler = new THREE.Euler(
+//   90 / 180 * Math.PI,
+//   0,
+//   0
+// );
+// box.rotation.copy(euler)
+// box.rotation.set(
+//   Math.PI / 2,
+//   0,
+//   0
+// )
+// 这种写法最后是旋转了70度
+// box.rotation.set(
+//   20 / 180 * Math.PI,
+//   0,
+//   0
+// )
+// box.rotation.set(
+//   70 / 180 * Math.PI,
+//   0,
+//   0
+// )
+// 这种写法最后是旋转了20 + 70 = 90度
+box.rotateX(20 / 180 * Math.PI)
+box.rotateX(70 / 180 * Math.PI)
+
+let angel = 0
 function animate() {
   if (controls) {
     controls.update()
   }
-  if (keyEnum.W) {
-    // // 向量缩放
-    // const velClone = velocity.clone().multiplyScalar(1/180)
-    // // 向量加减法API
-    // player.position.add(velClone);
-    // 向量缩放后，赋值给 调用向量（也就是上面两个函数的结合）
-    player.position.addScaledVector(velocity, 1/180);
-  }
-  
+  angel++;
+  // box.rotation.set(angel / 180 * Math.PI, 0, 0)
+  // box.rotation.x = angel / 180 * Math.PI
   
   renderer.render(scene, camera)
 }

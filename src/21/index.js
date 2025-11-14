@@ -78,8 +78,15 @@ scene.add(box);
 //   0
 // )
 // 这种写法最后是旋转了20 + 70 = 90度
-box.rotateX(20 / 180 * Math.PI)
-box.rotateX(70 / 180 * Math.PI)
+// box.rotateX(20 / 180 * Math.PI)
+// box.rotateX(70 / 180 * Math.PI)
+// 复杂的旋转使用欧拉角方式会出现"死锁"问题
+// 比如这里先绕y轴旋转90度
+// 之后在 animate 函数中，绕x轴和z轴旋转
+// 最后展现出来的结果和
+// 先不绕y轴旋转，直接在animate 函数中，绕x轴旋转
+// 的展现结果是一样的
+box.rotation.y = 90 / 180 * Math.PI
 
 let angel = 0
 function animate() {
@@ -89,7 +96,8 @@ function animate() {
   angel++;
   // box.rotation.set(angel / 180 * Math.PI, 0, 0)
   // box.rotation.x = angel / 180 * Math.PI
-  
+  box.rotation.x = angel / 180 * Math.PI
+  box.rotation.z = angel / 180 * Math.PI
   renderer.render(scene, camera)
 }
 
